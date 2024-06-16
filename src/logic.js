@@ -53,12 +53,12 @@ class GameBoard {
       let positionArray = [];
 
       for (let i = 0; i < shipSize; i++) {
-        checkPosition(this.matrix, i, x, y, shipSize, canPosition);
+        canPosition = checkPosition(this.matrix, i, x, y, shipSize);
+
         console.log(canPosition);
 
         if (canPosition === true) {
           positionArray.push(x + i);
-          console.log(positionArray);
         }
       }
 
@@ -102,7 +102,9 @@ class GameBoard {
   }
 }
 
-function checkPosition(array, i, x, y, shipSize, canPosition) {
+function checkPosition(array, i, x, y, shipSize) {
+  let position = true;
+
   if (y > 0 && y < 9 && x > 0 && x + shipSize < 9) {
     if (
       array[y][x - 1][0] !== undefined ||
@@ -115,7 +117,7 @@ function checkPosition(array, i, x, y, shipSize, canPosition) {
       array[y + 1][x - 1][0] !== undefined ||
       array[y + 1][x + shipSize][0] !== undefined
     ) {
-      canPosition = false;
+      position = false;
     }
   } else if (y === 0 && x === 0) {
     if (
@@ -124,16 +126,16 @@ function checkPosition(array, i, x, y, shipSize, canPosition) {
       array[y + 1][x + i][0] !== undefined ||
       array[y + 1][x + shipSize][0] !== undefined
     ) {
-      canPosition = false;
+      position = false;
     }
   } else if (y === 0 && x + shipSize === 9) {
     if (
       array[y][x - 1][0] !== undefined ||
       array[y][x + i][0] !== undefined ||
-      array[y + 1][x + i][0] !== undefined ||
-      array[y + 1][x - 1][0] !== undefined
+      array[y + 1][x - 1][0] !== undefined ||
+      array[y + 1][x + i][0] !== undefined
     ) {
-      canPosition = false;
+      position = false;
     }
   } else if (y === 9 && x === 0) {
     if (
@@ -142,7 +144,7 @@ function checkPosition(array, i, x, y, shipSize, canPosition) {
       array[y - 1][x + i][0] !== undefined ||
       array[y - 1][x + shipSize][0] !== undefined
     ) {
-      canPosition = false;
+      position = false;
     }
   } else if (y === 9 && x + shipSize === 9) {
     if (
@@ -151,18 +153,18 @@ function checkPosition(array, i, x, y, shipSize, canPosition) {
       array[y - 1][x - 1][0] !== undefined ||
       array[y - 1][x + i][0] !== undefined
     ) {
-      canPosition = false;
+      position = false;
     }
   } else if (y === 0 && x > 0 && x + shipSize < 9) {
     if (
       array[y][x - 1][0] !== undefined ||
       array[y][x + i][0] !== undefined ||
       array[y][x + shipSize][0] !== undefined ||
-      array[y + 1][x + i][0] !== undefined ||
       array[y + 1][x - 1][0] !== undefined ||
+      array[y + 1][x + i][0] !== undefined ||
       array[y + 1][x + shipSize][0] !== undefined
     ) {
-      canPosition = false;
+      position = false;
     }
   } else if (y === 9 && x > 0 && x + shipSize < 9) {
     if (
@@ -173,7 +175,9 @@ function checkPosition(array, i, x, y, shipSize, canPosition) {
       array[y - 1][x + i][0] !== undefined ||
       array[y - 1][x + shipSize][0] !== undefined
     ) {
-      canPosition = false;
+      position = false;
     }
   }
+
+  return position;
 }
