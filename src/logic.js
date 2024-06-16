@@ -37,23 +37,143 @@ class GameBoard {
     });
 
     this.matrix = matrix;
-    this.battleship = new Ship(4);
-    this.cruisers = [new Ship(3), new Ship(3)];
-    this.destroyers = [new Ship(2), new Ship(2), new Ship(2)];
-    this.submarines = [new Ship(1), new Ship(1), new Ship(1), new Ship(1)];
+    this.battleship = [];
+    this.cruisers = [];
+    this.destroyers = [];
+    this.submarines = [];
   }
 
   placeShip(shipSize, x, y, orientation = 'h') {
     if (x + shipSize > 9 || y > 9 || x < 0 || y < 0) {
       return 'x- and y-coordinates should be in the range of 0 and 9';
+    } else if (shipSize < 1 || shipSize > 4) {
+      return 'Ship size should be in the range of 1 and 4';
     } else {
-      if (shipSize < 1 || shipSize > 4) {
-        return 'Ship size should be in the range of 1 and 4';
-      } else {
-        for (let i = 0; i < shipSize; i++) {
-          this.matrix[y][x + i].push('ship1');
+      let canPosition = true;
+      let positionArray = [];
+
+      for (let i = 0; i < shipSize; i++) {
+        checkPosition(this.matrix, i, x, y, shipSize, canPosition);
+        console.log(canPosition);
+
+        if (canPosition === true) {
+          positionArray.push(x + i);
+          console.log(positionArray);
         }
       }
+
+      if (canPosition === true) {
+        let ship = new Ship(shipSize);
+        let shipClass;
+
+        switch (shipSize) {
+          case 1:
+            if (this.submarines.length < 4) {
+              this.submarines.push(ship);
+              shipClass = 'submarines';
+            }
+            break;
+          case 2:
+            if (this.destroyers.length < 3) {
+              this.destroyers.push(ship);
+              shipClass = 'destroyers';
+            }
+            break;
+          case 3:
+            if (this.cruisers.length < 2) {
+              this.cruisers.push(ship);
+              shipClass = 'cruisers';
+            }
+            break;
+          case 4:
+            if (this.battleship < 1) {
+              this.battleship.push(ship);
+              shipClass = 'battleship';
+            }
+            break;
+        }
+
+        positionArray.forEach((element) => {
+          this.matrix[y][element].push(shipClass);
+          this.matrix[y][element].push(this[shipClass].length - 1);
+        });
+      }
+    }
+  }
+}
+
+function checkPosition(array, i, x, y, shipSize, canPosition) {
+  if (y > 0 && y < 9 && x > 0 && x + shipSize < 9) {
+    if (
+      array[y][x - 1][0] !== undefined ||
+      array[y][x + i][0] !== undefined ||
+      array[y][x + shipSize][0] !== undefined ||
+      array[y - 1][x - 1][0] !== undefined ||
+      array[y - 1][x + i][0] !== undefined ||
+      array[y - 1][x + shipSize][0] !== undefined ||
+      array[y + 1][x + i][0] !== undefined ||
+      array[y + 1][x - 1][0] !== undefined ||
+      array[y + 1][x + shipSize][0] !== undefined
+    ) {
+      canPosition = false;
+    }
+  } else if (y === 0 && x === 0) {
+    if (
+      array[y][x + i][0] !== undefined ||
+      array[y][x + shipSize][0] !== undefined ||
+      array[y + 1][x + i][0] !== undefined ||
+      array[y + 1][x + shipSize][0] !== undefined
+    ) {
+      canPosition = false;
+    }
+  } else if (y === 0 && x + shipSize === 9) {
+    if (
+      array[y][x - 1][0] !== undefined ||
+      array[y][x + i][0] !== undefined ||
+      array[y + 1][x + i][0] !== undefined ||
+      array[y + 1][x - 1][0] !== undefined
+    ) {
+      canPosition = false;
+    }
+  } else if (y === 9 && x === 0) {
+    if (
+      array[y][x + i][0] !== undefined ||
+      array[y][x + shipSize][0] !== undefined ||
+      array[y - 1][x + i][0] !== undefined ||
+      array[y - 1][x + shipSize][0] !== undefined
+    ) {
+      canPosition = false;
+    }
+  } else if (y === 9 && x + shipSize === 9) {
+    if (
+      array[y][x - 1][0] !== undefined ||
+      array[y][x + i][0] !== undefined ||
+      array[y - 1][x - 1][0] !== undefined ||
+      array[y - 1][x + i][0] !== undefined
+    ) {
+      canPosition = false;
+    }
+  } else if (y === 0 && x > 0 && x + shipSize < 9) {
+    if (
+      array[y][x - 1][0] !== undefined ||
+      array[y][x + i][0] !== undefined ||
+      array[y][x + shipSize][0] !== undefined ||
+      array[y + 1][x + i][0] !== undefined ||
+      array[y + 1][x - 1][0] !== undefined ||
+      array[y + 1][x + shipSize][0] !== undefined
+    ) {
+      canPosition = false;
+    }
+  } else if (y === 9 && x > 0 && x + shipSize < 9) {
+    if (
+      array[y][x - 1][0] !== undefined ||
+      array[y][x + i][0] !== undefined ||
+      array[y][x + shipSize][0] !== undefined ||
+      array[y - 1][x - 1][0] !== undefined ||
+      array[y - 1][x + i][0] !== undefined ||
+      array[y - 1][x + shipSize][0] !== undefined
+    ) {
+      canPosition = false;
     }
   }
 }
