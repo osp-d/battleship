@@ -59,4 +59,29 @@ test('Initial ship placement', () => {
 
   expect(firstGameBoard.matrix[6][6][1]).toBe(0);
   expect(firstGameBoard.matrix[6][7][1]).toBe(0);
+
+  firstGameBoard.placeShip(1, 5, 5);
+  expect(firstGameBoard.matrix[5][5][0]).toBe(undefined);
+  firstGameBoard.placeShip(1, 5, 6);
+  expect(firstGameBoard.matrix[5][6][0]).toBe(undefined);
+  firstGameBoard.placeShip(1, 5, 7);
+  expect(firstGameBoard.matrix[5][7][0]).toBe(undefined);
+  firstGameBoard.placeShip(1, 5, 8);
+  expect(firstGameBoard.matrix[5][8][0]).toBe(undefined);
+  firstGameBoard.placeShip(1, 6, 5);
+  expect(firstGameBoard.matrix[6][5][0]).toBe(undefined);
+  firstGameBoard.placeShip(1, 6, 6);
+  expect(firstGameBoard.matrix[6][6][0]).toBe('destroyers');
+  firstGameBoard.placeShip(1, 6, 7);
+  expect(firstGameBoard.matrix[6][7][0]).toBe('destroyers');
+  firstGameBoard.placeShip(1, 6, 8);
+  expect(firstGameBoard.matrix[6][8][0]).toBe(undefined);
+  firstGameBoard.placeShip(1, 7, 5);
+  expect(firstGameBoard.matrix[7][5][0]).toBe(undefined);
+  firstGameBoard.placeShip(1, 7, 6);
+  expect(firstGameBoard.matrix[7][6][0]).toBe(undefined);
+  firstGameBoard.placeShip(1, 7, 7);
+  expect(firstGameBoard.matrix[7][7][0]).toBe(undefined);
+  firstGameBoard.placeShip(1, 7, 8);
+  expect(firstGameBoard.matrix[7][8][0]).toBe(undefined);
 });
