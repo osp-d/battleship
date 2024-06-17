@@ -56,7 +56,11 @@ class GameBoard {
   }
 
   placeShip(shipSize, y, x, orientation = 'h') {
-    if (x + shipSize > 10 || y > 10 || x < 1 || y < 1) {
+    if (
+      (orientation === 'h' &&
+        (x + shipSize > 11 || y > 10 || x < 1 || y < 1)) ||
+      (orientation === 'v' && (y + shipSize > 11 || x > 10 || x < 1 || y < 1))
+    ) {
       return 'x- and y-coordinates should be in the range of 1 and 10';
     } else if (shipSize < 1 || shipSize > 4) {
       return 'Ship size should be in the range of 1 and 4';
@@ -115,7 +119,6 @@ class GameBoard {
           case 4:
             if (this.battleship < 1) {
               this.battleship.push(ship);
-              this.#renderShip(positionArray, 'h', y, 'battleship');
 
               orientation === 'h'
                 ? this.#renderShip(positionArray, 'h', y, 'battleship')
@@ -124,6 +127,22 @@ class GameBoard {
             break;
         }
       }
+    }
+  }
+
+  receiveAttack(y, x) {
+    if (this.matrix[y][x][0] === undefined) {
+      this.matrix[y][x].push('attacked');
+    } else if (
+      this.matrix[y][x][0] !== undefined &&
+      this.matrix[y][x][0] !== 'attacked' &&
+      this.matrix[y][x][3] !== 'attacked'
+    ) {
+      const shipClass = this.matrix[y][x][0];
+      const shipID = this.matrix[y][x][1];
+      this.matrix[y][x][3] = 'attacked';
+
+      this[shipClass][shipID].hits();
     }
   }
 }

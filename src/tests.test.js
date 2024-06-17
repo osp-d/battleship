@@ -8,11 +8,11 @@ test('Object length property', () => {
 
   firstShip.hits();
   expect(firstShip.hitNumber).toBe(1);
-  expect(firstShip.sunk).toBe(true);
+  expect(firstShip.sunk).toBeTruthy();
 
   firstShip.hits();
   expect(firstShip.hitNumber).toBe(1);
-  expect(firstShip.sunk).toBe(true);
+  expect(firstShip.sunk).toBeTruthy();
 });
 
 test('GameBoard matrix structure', () => {
@@ -34,7 +34,7 @@ test('Incorrect input', () => {
   expect(firstGameBoard.placeShip(2, 0, -1)).toBe(
     'x- and y-coordinates should be in the range of 1 and 10'
   );
-  expect(firstGameBoard.placeShip(4, 10, 7)).toBe(
+  expect(firstGameBoard.placeShip(4, 11, 7)).toBe(
     'x- and y-coordinates should be in the range of 1 and 10'
   );
 
@@ -65,29 +65,29 @@ test('Initial ship placement', () => {
   expect(firstGameBoard.matrix[6][7][1]).toBe(0);
 
   firstGameBoard.placeShip(1, 5, 5);
-  expect(firstGameBoard.matrix[5][5][0]).toBe(undefined);
+  expect(firstGameBoard.matrix[5][5][0]).toBeUndefined();
   firstGameBoard.placeShip(1, 5, 6);
-  expect(firstGameBoard.matrix[5][6][0]).toBe(undefined);
+  expect(firstGameBoard.matrix[5][6][0]).toBeUndefined();
   firstGameBoard.placeShip(1, 5, 7);
-  expect(firstGameBoard.matrix[5][7][0]).toBe(undefined);
+  expect(firstGameBoard.matrix[5][7][0]).toBeUndefined();
   firstGameBoard.placeShip(1, 5, 8);
-  expect(firstGameBoard.matrix[5][8][0]).toBe(undefined);
+  expect(firstGameBoard.matrix[5][8][0]).toBeUndefined();
   firstGameBoard.placeShip(1, 6, 5);
-  expect(firstGameBoard.matrix[6][5][0]).toBe(undefined);
+  expect(firstGameBoard.matrix[6][5][0]).toBeUndefined();
   firstGameBoard.placeShip(1, 6, 6);
   expect(firstGameBoard.matrix[6][6][0]).toBe('destroyers');
   firstGameBoard.placeShip(1, 6, 7);
   expect(firstGameBoard.matrix[6][7][0]).toBe('destroyers');
   firstGameBoard.placeShip(1, 6, 8);
-  expect(firstGameBoard.matrix[6][8][0]).toBe(undefined);
+  expect(firstGameBoard.matrix[6][8][0]).toBeUndefined();
   firstGameBoard.placeShip(1, 7, 5);
-  expect(firstGameBoard.matrix[7][5][0]).toBe(undefined);
+  expect(firstGameBoard.matrix[7][5][0]).toBeUndefined();
   firstGameBoard.placeShip(1, 7, 6);
-  expect(firstGameBoard.matrix[7][6][0]).toBe(undefined);
+  expect(firstGameBoard.matrix[7][6][0]).toBeUndefined();
   firstGameBoard.placeShip(1, 7, 7);
-  expect(firstGameBoard.matrix[7][7][0]).toBe(undefined);
+  expect(firstGameBoard.matrix[7][7][0]).toBeUndefined();
   firstGameBoard.placeShip(1, 7, 8);
-  expect(firstGameBoard.matrix[7][8][0]).toBe(undefined);
+  expect(firstGameBoard.matrix[7][8][0]).toBeUndefined();
 
   // Vertical positioning tests
 
@@ -97,22 +97,29 @@ test('Initial ship placement', () => {
   expect(firstGameBoard.matrix[7][2][1]).toBe(1);
   expect(firstGameBoard.matrix[8][2][1]).toBe(1);
 
+  firstGameBoard.placeShip(2, 8, 9, 'v');
+  console.log(firstGameBoard.matrix);
+  expect(firstGameBoard.matrix[8][9][0]).toBe('destroyers');
+  expect(firstGameBoard.matrix[9][9][0]).toBe('destroyers');
+  expect(firstGameBoard.matrix[8][9][1]).toBe(2);
+  expect(firstGameBoard.matrix[9][9][1]).toBe(2);
+
   firstGameBoard.placeShip(2, 5, 1, 'v');
-  expect(firstGameBoard.matrix[5][1][0]).toBe(undefined);
+  expect(firstGameBoard.matrix[5][1][0]).toBeUndefined();
   firstGameBoard.placeShip(2, 5, 2, 'v');
-  expect(firstGameBoard.matrix[5][2][0]).toBe(undefined);
+  expect(firstGameBoard.matrix[5][2][0]).toBeUndefined();
   firstGameBoard.placeShip(2, 5, 3, 'v');
-  expect(firstGameBoard.matrix[5][3][0]).toBe(undefined);
+  expect(firstGameBoard.matrix[5][3][0]).toBeUndefined();
   firstGameBoard.placeShip(2, 7, 1, 'v');
-  expect(firstGameBoard.matrix[7][1][0]).toBe(undefined);
+  expect(firstGameBoard.matrix[7][1][0]).toBeUndefined();
   firstGameBoard.placeShip(2, 7, 3, 'v');
-  expect(firstGameBoard.matrix[7][3][0]).toBe(undefined);
+  expect(firstGameBoard.matrix[7][3][0]).toBeUndefined();
   firstGameBoard.placeShip(2, 9, 1, 'v');
-  expect(firstGameBoard.matrix[9][1][0]).toBe(undefined);
+  expect(firstGameBoard.matrix[9][1][0]).toBeUndefined();
   firstGameBoard.placeShip(2, 9, 2, 'v');
-  expect(firstGameBoard.matrix[9][2][0]).toBe(undefined);
+  expect(firstGameBoard.matrix[9][2][0]).toBeUndefined();
   firstGameBoard.placeShip(2, 9, 3, 'v');
-  expect(firstGameBoard.matrix[9][3][0]).toBe(undefined);
+  expect(firstGameBoard.matrix[9][3][0]).toBeUndefined();
 });
 
 test('Maximum number of positioned ships', () => {
@@ -125,10 +132,10 @@ test('Maximum number of positioned ships', () => {
   expect(firstGameBoard.matrix[1][4][0]).toBe('battleship');
 
   firstGameBoard.placeShip(4, 6, 6);
-  expect(firstGameBoard.matrix[6][6][0]).toBe(undefined);
-  expect(firstGameBoard.matrix[6][7][0]).toBe(undefined);
-  expect(firstGameBoard.matrix[6][8][0]).toBe(undefined);
-  expect(firstGameBoard.matrix[6][9][0]).toBe(undefined);
+  expect(firstGameBoard.matrix[6][6][0]).toBeUndefined();
+  expect(firstGameBoard.matrix[6][7][0]).toBeUndefined();
+  expect(firstGameBoard.matrix[6][8][0]).toBeUndefined();
+  expect(firstGameBoard.matrix[6][9][0]).toBeUndefined();
 
   firstGameBoard.placeShip(1, 3, 1);
   expect(firstGameBoard.matrix[3][1][0]).toBe('submarines');
@@ -147,6 +154,32 @@ test('Maximum number of positioned ships', () => {
   expect(firstGameBoard.matrix[3][7][1]).toBe(3);
 
   firstGameBoard.placeShip(1, 3, 9);
-  expect(firstGameBoard.matrix[3][9][0]).toBe(undefined);
-  expect(firstGameBoard.matrix[3][9][1]).toBe(undefined);
+  expect(firstGameBoard.matrix[3][9][0]).toBeUndefined();
+  expect(firstGameBoard.matrix[3][9][1]).toBeUndefined();
+});
+
+test('Receive attack', () => {
+  let firstGameBoard = new GameBoard();
+
+  firstGameBoard.receiveAttack(3, 3);
+  expect(firstGameBoard.matrix[3][3][0]).toBe('attacked');
+
+  firstGameBoard.receiveAttack(3, 3);
+  expect(firstGameBoard.matrix[3][3][0]).toBe('attacked');
+
+  firstGameBoard.placeShip(3, 8, 10, 'v');
+  expect(firstGameBoard.matrix[8][10][0]).toBe('cruisers');
+  expect(firstGameBoard.matrix[9][10][0]).toBe('cruisers');
+  expect(firstGameBoard.matrix[10][10][0]).toBe('cruisers');
+
+  firstGameBoard.receiveAttack(8, 10);
+  expect(firstGameBoard.cruisers[0].hitNumber).toBe(1);
+  firstGameBoard.receiveAttack(9, 10);
+  expect(firstGameBoard.cruisers[0].hitNumber).toBe(2);
+  firstGameBoard.receiveAttack(9, 10);
+  expect(firstGameBoard.cruisers[0].hitNumber).not.toBe(3);
+  expect(firstGameBoard.cruisers[0].isSunk()).toBeFalsy();
+  firstGameBoard.receiveAttack(10, 10);
+  expect(firstGameBoard.cruisers[0].hitNumber).toBe(3);
+  expect(firstGameBoard.cruisers[0].isSunk()).toBeTruthy();
 });
