@@ -26,12 +26,12 @@ class GameBoard {
   constructor() {
     let matrix = [];
 
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 12; i++) {
       matrix.push([]);
     }
 
     matrix.forEach((array) => {
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < 12; i++) {
         array.push([]);
       }
     });
@@ -44,8 +44,8 @@ class GameBoard {
   }
 
   placeShip(shipSize, x, y, orientation = 'h') {
-    if (x + shipSize > 9 || y > 9 || x < 0 || y < 0) {
-      return 'x- and y-coordinates should be in the range of 0 and 9';
+    if (x + shipSize > 10 || y > 10 || x < 1 || y < 1) {
+      return 'x- and y-coordinates should be in the range of 1 and 10';
     } else if (shipSize < 1 || shipSize > 4) {
       return 'Ship size should be in the range of 1 and 4';
     } else {
@@ -105,78 +105,18 @@ class GameBoard {
 function checkPosition(array, i, x, y, shipSize) {
   let position = true;
 
-  if (y > 0 && y < 9 && x > 0 && x + shipSize < 9) {
-    if (
-      array[y][x - 1][0] !== undefined ||
-      array[y][x + i][0] !== undefined ||
-      array[y][x + shipSize][0] !== undefined ||
-      array[y - 1][x - 1][0] !== undefined ||
-      array[y - 1][x + i][0] !== undefined ||
-      array[y - 1][x + shipSize][0] !== undefined ||
-      array[y + 1][x + i][0] !== undefined ||
-      array[y + 1][x - 1][0] !== undefined ||
-      array[y + 1][x + shipSize][0] !== undefined
-    ) {
-      position = false;
-    }
-  } else if (y === 0 && x === 0) {
-    if (
-      array[y][x + i][0] !== undefined ||
-      array[y][x + shipSize][0] !== undefined ||
-      array[y + 1][x + i][0] !== undefined ||
-      array[y + 1][x + shipSize][0] !== undefined
-    ) {
-      position = false;
-    }
-  } else if (y === 0 && x + shipSize === 9) {
-    if (
-      array[y][x - 1][0] !== undefined ||
-      array[y][x + i][0] !== undefined ||
-      array[y + 1][x - 1][0] !== undefined ||
-      array[y + 1][x + i][0] !== undefined
-    ) {
-      position = false;
-    }
-  } else if (y === 9 && x === 0) {
-    if (
-      array[y][x + i][0] !== undefined ||
-      array[y][x + shipSize][0] !== undefined ||
-      array[y - 1][x + i][0] !== undefined ||
-      array[y - 1][x + shipSize][0] !== undefined
-    ) {
-      position = false;
-    }
-  } else if (y === 9 && x + shipSize === 9) {
-    if (
-      array[y][x - 1][0] !== undefined ||
-      array[y][x + i][0] !== undefined ||
-      array[y - 1][x - 1][0] !== undefined ||
-      array[y - 1][x + i][0] !== undefined
-    ) {
-      position = false;
-    }
-  } else if (y === 0 && x > 0 && x + shipSize < 9) {
-    if (
-      array[y][x - 1][0] !== undefined ||
-      array[y][x + i][0] !== undefined ||
-      array[y][x + shipSize][0] !== undefined ||
-      array[y + 1][x - 1][0] !== undefined ||
-      array[y + 1][x + i][0] !== undefined ||
-      array[y + 1][x + shipSize][0] !== undefined
-    ) {
-      position = false;
-    }
-  } else if (y === 9 && x > 0 && x + shipSize < 9) {
-    if (
-      array[y][x - 1][0] !== undefined ||
-      array[y][x + i][0] !== undefined ||
-      array[y][x + shipSize][0] !== undefined ||
-      array[y - 1][x - 1][0] !== undefined ||
-      array[y - 1][x + i][0] !== undefined ||
-      array[y - 1][x + shipSize][0] !== undefined
-    ) {
-      position = false;
-    }
+  if (
+    array[y][x - 1][0] !== undefined ||
+    array[y][x + i][0] !== undefined ||
+    array[y][x + shipSize][0] !== undefined ||
+    array[y - 1][x - 1][0] !== undefined ||
+    array[y - 1][x + i][0] !== undefined ||
+    array[y - 1][x + shipSize][0] !== undefined ||
+    array[y + 1][x + i][0] !== undefined ||
+    array[y + 1][x - 1][0] !== undefined ||
+    array[y + 1][x + shipSize][0] !== undefined
+  ) {
+    position = false;
   }
 
   return position;

@@ -18,40 +18,40 @@ test('Object length property', () => {
 test('GameBoard matrix structure', () => {
   let firstGameBoard = new GameBoard();
 
-  expect(firstGameBoard.matrix.length).toBe(10);
-  expect(firstGameBoard.matrix[0].length).toBe(10);
+  expect(firstGameBoard.matrix.length).toBe(12);
+  expect(firstGameBoard.matrix[0].length).toBe(12);
 });
 
 test('Initial ship placement', () => {
   let firstGameBoard = new GameBoard();
 
   expect(firstGameBoard.placeShip(2, 9, 0)).toBe(
-    'x- and y-coordinates should be in the range of 0 and 9'
+    'x- and y-coordinates should be in the range of 1 and 10'
   );
   expect(firstGameBoard.placeShip(2, 7, -1)).toBe(
-    'x- and y-coordinates should be in the range of 0 and 9'
+    'x- and y-coordinates should be in the range of 1 and 10'
   );
   expect(firstGameBoard.placeShip(2, -1, 0)).toBe(
-    'x- and y-coordinates should be in the range of 0 and 9'
+    'x- and y-coordinates should be in the range of 1 and 10'
   );
-  expect(firstGameBoard.placeShip(2, 7, 10)).toBe(
-    'x- and y-coordinates should be in the range of 0 and 9'
+  expect(firstGameBoard.placeShip(4, 7, 10)).toBe(
+    'x- and y-coordinates should be in the range of 1 and 10'
   );
 
-  expect(firstGameBoard.placeShip(5, 0, 0)).toBe(
+  expect(firstGameBoard.placeShip(5, 1, 1)).toBe(
     'Ship size should be in the range of 1 and 4'
   );
 
-  firstGameBoard.placeShip(4, 0, 0);
-  expect(firstGameBoard.matrix[0][0][0]).toBe('battleship');
-  expect(firstGameBoard.matrix[0][1][0]).toBe('battleship');
-  expect(firstGameBoard.matrix[0][2][0]).toBe('battleship');
-  expect(firstGameBoard.matrix[0][3][0]).toBe('battleship');
+  firstGameBoard.placeShip(4, 1, 1);
+  expect(firstGameBoard.matrix[1][1][0]).toBe('battleship');
+  expect(firstGameBoard.matrix[1][2][0]).toBe('battleship');
+  expect(firstGameBoard.matrix[1][3][0]).toBe('battleship');
+  expect(firstGameBoard.matrix[1][4][0]).toBe('battleship');
 
-  expect(firstGameBoard.matrix[0][0][1]).toBe(0);
-  expect(firstGameBoard.matrix[0][1][1]).toBe(0);
-  expect(firstGameBoard.matrix[0][2][1]).toBe(0);
-  expect(firstGameBoard.matrix[0][3][1]).toBe(0);
+  expect(firstGameBoard.matrix[1][1][1]).toBe(0);
+  expect(firstGameBoard.matrix[1][2][1]).toBe(0);
+  expect(firstGameBoard.matrix[1][3][1]).toBe(0);
+  expect(firstGameBoard.matrix[1][4][1]).toBe(0);
 
   firstGameBoard.placeShip(2, 6, 6);
   expect(firstGameBoard.matrix[6][6][0]).toBe('destroyers');
