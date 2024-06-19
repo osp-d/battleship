@@ -1,4 +1,4 @@
-export { Ship, GameBoard };
+export { Ship, GameBoard, Player, Game };
 
 class Ship {
   constructor(length) {
@@ -23,6 +23,8 @@ class Ship {
 }
 
 class GameBoard {
+  #sunkCounter = 0;
+
   constructor() {
     let matrix = [];
 
@@ -92,6 +94,7 @@ class GameBoard {
           case 1:
             if (this.submarines.length < 4) {
               this.submarines.push(ship);
+              this.#sunkCounter += shipSize;
 
               orientation === 'h'
                 ? this.#renderShip(positionArray, 'h', y, 'submarines')
@@ -101,6 +104,7 @@ class GameBoard {
           case 2:
             if (this.destroyers.length < 3) {
               this.destroyers.push(ship);
+              this.#sunkCounter += shipSize;
 
               orientation === 'h'
                 ? this.#renderShip(positionArray, 'h', y, 'destroyers')
@@ -110,6 +114,7 @@ class GameBoard {
           case 3:
             if (this.cruisers.length < 2) {
               this.cruisers.push(ship);
+              this.#sunkCounter += shipSize;
 
               orientation === 'h'
                 ? this.#renderShip(positionArray, 'h', y, 'cruisers')
@@ -119,6 +124,7 @@ class GameBoard {
           case 4:
             if (this.battleship < 1) {
               this.battleship.push(ship);
+              this.#sunkCounter += shipSize;
 
               orientation === 'h'
                 ? this.#renderShip(positionArray, 'h', y, 'battleship')
@@ -136,13 +142,18 @@ class GameBoard {
     } else if (
       this.matrix[y][x][0] !== undefined &&
       this.matrix[y][x][0] !== 'attacked' &&
-      this.matrix[y][x][3] !== 'attacked'
+      this.matrix[y][x][2] !== 'attacked'
     ) {
       const shipClass = this.matrix[y][x][0];
       const shipID = this.matrix[y][x][1];
-      this.matrix[y][x][3] = 'attacked';
+      this.matrix[y][x][2] = 'attacked';
 
       this[shipClass][shipID].hits();
+      this.#sunkCounter--;
+
+      if (this.#sunkCounter === 0) {
+        return true;
+      }
     }
   }
 }
@@ -180,5 +191,58 @@ function checkPosition(matrix, i, y, x, shipSize, orientation) {
     }
 
     return true;
+  }
+}
+
+class Player {
+  constructor(playerType) {
+    this.playerType = playerType;
+    this.board = new GameBoard();
+  }
+}
+
+class Game {
+  #computerTurnsArray = [];
+
+  constructor() {
+    this.player1 = new Player('human');
+    this.player2 = new Player('computer');
+    this.running = true;
+    this.turn = 1;
+    this.computerAttackCoordinate = [1, 1];
+  }
+
+  nextTurn() {
+    const objectReference = this;
+
+    if (this.turn === 1) {
+      this.turn = 2;
+    } else {
+      const resultPoints = this.#computerTurn();
+      const resultString = `${resultPoints[0]}${resultPoints[1]}`;
+
+      if (!this.#computerTurnsArray.includes(resultString)) {
+        this.#computerTurnsArray.push(`${resultPoints[0]}${resultPoints[1]}`);
+        this.computerAttackCoordinate[0] = resultPoints[0];
+        this.computerAttackCoordinate[1] = resultPoints[1];
+
+        if (
+          this.player1.board.receiveAttack(resultPoints[0], resultPoints[1])
+        ) {
+          this.running = false;
+        }
+
+        this.turn = 1;
+      } else {
+        objectReference.nextTurn();
+      }
+    }
+  }
+
+  #computerTurn() {
+    const hitPointY = Math.floor(Math.random() * 10) + 1;
+    const hitPointX = Math.floor(Math.random() * 10) + 1;
+
+    return [hitPointY, hitPointX];
   }
 }
