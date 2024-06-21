@@ -7,10 +7,12 @@ const playerRows = document.querySelectorAll('#player > .battlefield > .row');
 const opponentRows = document.querySelectorAll(
   '#opponent > .battlefield > .row'
 );
+const newGameBtn = document.querySelector('button');
+const gameStatus = document.querySelector('.game-status');
 
-const game = new Game();
-const player1 = game.player1;
-const player2 = game.player2;
+let game = new Game();
+let player1 = game.player1;
+let player2 = game.player2;
 
 for (let i = 0; i < playerRows.length; i++) {
   playerRows[i].setAttribute('id', `p${i}`);
@@ -32,33 +34,116 @@ for (let i = 0; i < opponentRows.length; i++) {
   }
 }
 
-// Pre-defined ship placement for test
+const handlers = new Map();
+const attackHandler = (element) => () => playerAttack(element);
 
-player1.board.placeShip(4, 2, 3);
-player1.board.placeShip(3, 6, 2, 'v');
-player1.board.placeShip(3, 4, 8, 'v');
-player1.board.placeShip(2, 4, 3);
-player1.board.placeShip(2, 6, 5, 'v');
-player1.board.placeShip(2, 10, 6);
-player1.board.placeShip(1, 1, 10);
-player1.board.placeShip(1, 9, 4);
-player1.board.placeShip(1, 8, 7);
-player1.board.placeShip(1, 9, 10);
+newGameBtn.addEventListener('click', () => playRound());
 
-player2.board.placeShip(4, 1, 1, 'v');
-player2.board.placeShip(3, 2, 4);
-player2.board.placeShip(3, 4, 8);
-player2.board.placeShip(2, 6, 3, 'v');
-player2.board.placeShip(2, 7, 5);
-player2.board.placeShip(2, 10, 9);
-player2.board.placeShip(1, 6, 8);
-player2.board.placeShip(1, 9, 2);
-player2.board.placeShip(1, 4, 5);
-player2.board.placeShip(1, 10, 5);
-player2.board.placeShip(1, 10, 1);
+function playRound() {
+  myCells.forEach((element) => {
+    if (element.hasChildNodes()) {
+      element.removeChild(element.firstChild);
+    }
+
+    if (element.classList.contains('hit')) {
+      element.classList.remove('hit');
+    }
+
+    if (element.classList.contains('clicked')) {
+      element.classList.remove('clicked');
+    }
+  });
+
+  oppCells.forEach((element) => {
+    const handler = attackHandler(element);
+    handlers.set(element, handler);
+    element.addEventListener('click', handler);
+
+    if (element.hasChildNodes()) {
+      element.removeChild(element.firstChild);
+    }
+
+    if (element.classList.contains('hit')) {
+      element.classList.remove('hit');
+    }
+
+    if (element.classList.contains('clicked')) {
+      element.classList.remove('clicked');
+    }
+
+    element.addEventListener('mouseover', () => {
+      if (!element.classList.contains('clicked')) {
+        element.classList.add('hovered');
+      }
+    });
+
+    element.addEventListener('mouseleave', () => {
+      element.classList.remove('hovered');
+    });
+
+    element.addEventListener('mouseup', () => {
+      element.classList.remove('hovered');
+    });
+  });
+
+  game = new Game();
+  player1 = game.player1;
+  player2 = game.player2;
+
+  // Pre-defined ship placement for test
+
+  player1.board.placeShip(4, 2, 3);
+  player1.board.placeShip(3, 6, 2, 'v');
+  player1.board.placeShip(3, 4, 8, 'v');
+  player1.board.placeShip(2, 4, 3);
+  player1.board.placeShip(2, 6, 5, 'v');
+  player1.board.placeShip(2, 10, 6);
+  player1.board.placeShip(1, 1, 10);
+  player1.board.placeShip(1, 9, 4);
+  player1.board.placeShip(1, 8, 7);
+  player1.board.placeShip(1, 9, 10);
+
+  player2.board.placeShip(4, 1, 1, 'v');
+  player2.board.placeShip(3, 2, 4);
+  player2.board.placeShip(3, 4, 8);
+  player2.board.placeShip(2, 6, 3, 'v');
+  player2.board.placeShip(2, 7, 5);
+  player2.board.placeShip(2, 10, 9);
+  player2.board.placeShip(1, 6, 8);
+  player2.board.placeShip(1, 9, 2);
+  player2.board.placeShip(1, 4, 5);
+  player2.board.placeShip(1, 10, 5);
+  player2.board.placeShip(1, 10, 1);
+
+  myCells.forEach((element) => {
+    const x = +element.id[3] + 1;
+    const y = +element.id[1] + 1;
+
+    if (
+      player1.board.matrix[y][x][0] !== undefined &&
+      player1.board.matrix[y][x][0] !== 'attacked' &&
+      player1.board.matrix[y][x][2] !== 'attacked'
+    ) {
+      element.classList.add('untouched');
+    }
+  });
+}
 
 function computerAttack() {
   game.nextTurn();
+  gameStatus.textContent = 'Your turn';
+
+  if (player2.winner === true) {
+    gameStatus.textContent = 'You lose!';
+
+    oppCells.forEach((element) => {
+      const handler = handlers.get(element);
+
+      if (handler) {
+        element.removeEventListener('click', handler);
+      }
+    });
+  }
 
   const y = game.computerAttackCoordinate[0];
   const x = game.computerAttackCoordinate[1];
@@ -79,64 +164,57 @@ function computerAttack() {
   }
 }
 
-myCells.forEach((element) => {
+const playerAttack = function (element) {
   const x = +element.id[3] + 1;
   const y = +element.id[1] + 1;
 
-  if (
-    player1.board.matrix[y][x][0] !== undefined &&
-    player1.board.matrix[y][x][0] !== 'attacked' &&
-    player1.board.matrix[y][x][2] !== 'attacked'
+  if (player2.board.matrix[y][x][0] === undefined) {
+    const dot = document.createElement('div');
+    element.classList.add('clicked');
+    dot.classList.add('miss');
+    element.appendChild(dot);
+
+    if (player2.board.receiveAttack(y, x) === true) {
+      player1.winner = true;
+      gameStatus.textContent = 'You win!';
+
+      oppCells.forEach((element) => {
+        const handler = handlers.get(element);
+
+        if (handler) {
+          element.removeEventListener('click', handler);
+        }
+      });
+
+      return;
+    }
+
+    game.nextTurn();
+    gameStatus.textContent = 'Computer turn';
+    computerAttack();
+  } else if (
+    player2.board.matrix[y][x][0] !== undefined &&
+    player2.board.matrix[y][x][0] !== 'attacked' &&
+    player2.board.matrix[y][x][2] !== 'attacked'
   ) {
-    element.classList.add('untouched');
+    element.classList.add('hit');
+    element.classList.add('clicked');
+
+    if (player2.board.receiveAttack(y, x) === true) {
+      gameStatus.textContent = 'You win!';
+
+      oppCells.forEach((element) => {
+        const handler = handlers.get(element);
+
+        if (handler) {
+          element.removeEventListener('click', handler);
+        }
+      });
+      return;
+    }
+
+    game.nextTurn();
+    gameStatus.textContent = 'Computer turn';
+    computerAttack();
   }
-});
-
-oppCells.forEach((element) => {
-  element.addEventListener('click', () => {
-    const x = +element.id[3] + 1;
-    const y = +element.id[1] + 1;
-
-    if (player2.board.matrix[y][x][0] === undefined) {
-      const dot = document.createElement('div');
-      element.classList.add('clicked');
-      dot.classList.add('miss');
-      element.appendChild(dot);
-
-      if (player2.board.receiveAttack(y, x) === true) {
-        game.running = false;
-      }
-
-      game.nextTurn();
-      computerAttack();
-    } else if (
-      player2.board.matrix[y][x][0] !== undefined &&
-      player2.board.matrix[y][x][0] !== 'attacked' &&
-      player2.board.matrix[y][x][2] !== 'attacked'
-    ) {
-      element.classList.add('hit');
-      element.classList.add('clicked');
-
-      if (player2.board.receiveAttack(y, x) === true) {
-        game.running = false;
-      }
-
-      game.nextTurn();
-      computerAttack();
-    }
-  });
-
-  element.addEventListener('mouseover', () => {
-    if (!element.classList.contains('clicked')) {
-      element.classList.add('hovered');
-    }
-  });
-
-  element.addEventListener('mouseleave', () => {
-    element.classList.remove('hovered');
-  });
-
-  element.addEventListener('mouseup', () => {
-    element.classList.remove('hovered');
-  });
-});
+};
