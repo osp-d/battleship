@@ -1,34 +1,42 @@
 :root {
-  --cell-color: rgb(162, 188, 255);
+  --cell-color: rgb(180, 201, 254);
+  --hit-cell-color: rgb(248, 113, 113);
+  --hover-cell-color: rgb(134, 239, 172);
+  --miss-dot-color: rgb(169 193 255);
+  --green-button: rgb(21, 128, 61);
+  --player-ship: rgb(96, 165, 250);
 }
-
-/* .board {
-} */
 
 .container {
   font-family: Arial, Helvetica, sans-serif;
   font-size: 16px;
-  display: inline-flex;
-  gap: 24px;
+  display: grid;
+  grid-template-columns: repeat(3, min-content);
+  grid-template-rows: repeat(4, min-content);
 }
 
 .board {
   display: grid;
   justify-items: center;
   align-items: center;
-  grid-template-columns: 1fr / 1fr;
-  grid-template-rows: 1fr / 1fr / 1fr;
 }
 
-.y-coordinates,
-.x-coordinates {
-  .coordinate-cell {
-    width: 32px;
-    height: 32px;
-    border: none;
-    text-align: center;
-    line-height: 32px;
-  }
+#player {
+  grid-column: 1 / 2;
+  grid-row: 2 / 3;
+}
+
+#opponent {
+  grid-column: 3 / 4;
+  grid-row: 2 / 3;
+}
+
+.coordinate-cell {
+  width: 32px;
+  height: 32px;
+  border: none;
+  text-align: center;
+  line-height: 32px;
 }
 
 .x-coordinates {
@@ -55,6 +63,9 @@
 }
 
 .cell {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 32px;
   height: 32px;
   border: 1px solid var(--cell-color);
@@ -68,4 +79,68 @@
   padding: 12px 0px;
   grid-column: 1 / 3;
   grid-row: 3 / 4;
+}
+
+.game-status {
+  margin: auto;
+  grid-column: 2 / 3;
+  grid-row: 1 / 2;
+}
+
+.miss {
+  height: 8px;
+  width: 8px;
+  border-radius: 100%;
+  background-color: var(--miss-dot-color);
+}
+
+.hit {
+  background-color: var(--hit-cell-color);
+}
+
+.hovered {
+  background-color: var(--hover-cell-color);
+}
+
+.untouched {
+  background-color: var(--player-ship);
+}
+
+button {
+  margin: auto;
+  height: 32px;
+  width: 100px;
+  border: none;
+  border-radius: 16px;
+  color: white;
+  font-weight: bold;
+}
+
+.new-game {
+  background-color: var(--green-button);
+  grid-column: 2 / 3;
+  grid-row: 3 / 4;
+}
+
+.placement-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  grid-column: 1 / 2;
+  grid-row: 4 / 5;
+
+  margin: auto;
+  width: 280px;
+  padding: 20px;
+  background-color: rgb(230, 243, 255);
+  border-radius: 12px;
+}
+
+.place {
+  margin: none;
+  background-color: var(--green-button);
+}
+
+.invisible {
+  display: none;
 }
