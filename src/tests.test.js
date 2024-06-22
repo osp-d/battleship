@@ -98,7 +98,6 @@ test('Initial ship placement', () => {
   expect(firstGameBoard.matrix[8][2][1]).toBe(1);
 
   firstGameBoard.placeShip(2, 8, 9, 'v');
-  console.log(firstGameBoard.matrix);
   expect(firstGameBoard.matrix[8][9][0]).toBe('destroyers');
   expect(firstGameBoard.matrix[9][9][0]).toBe('destroyers');
   expect(firstGameBoard.matrix[8][9][1]).toBe(2);

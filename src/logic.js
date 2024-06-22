@@ -198,6 +198,7 @@ class Player {
   constructor(playerType) {
     this.playerType = playerType;
     this.board = new GameBoard();
+    this.winner = false;
   }
 }
 
@@ -207,7 +208,6 @@ class Game {
   constructor() {
     this.player1 = new Player('human');
     this.player2 = new Player('computer');
-    this.running = true;
     this.turn = 1;
     this.computerAttackCoordinate = [1, 1];
   }
@@ -229,7 +229,7 @@ class Game {
         if (
           this.player1.board.receiveAttack(resultPoints[0], resultPoints[1])
         ) {
-          this.running = false;
+          this.player2.winner = true;
         }
 
         this.turn = 1;
