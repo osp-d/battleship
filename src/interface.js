@@ -157,18 +157,15 @@ async function playRound() {
     placeShipsControls.classList.add('invisible');
   });
 
-  // Pre-defined ship placement for test
-  player2.board.placeShip(4, 1, 1, 'v');
-  player2.board.placeShip(3, 2, 4);
-  player2.board.placeShip(3, 4, 8);
-  player2.board.placeShip(2, 6, 3, 'v');
-  player2.board.placeShip(2, 7, 5);
-  player2.board.placeShip(2, 10, 9);
-  player2.board.placeShip(1, 6, 8);
-  player2.board.placeShip(1, 9, 2);
-  player2.board.placeShip(1, 4, 5);
-  player2.board.placeShip(1, 10, 5);
-  player2.board.placeShip(1, 10, 1);
+  await randomPlacement((_) => {
+    if (
+      player2.board.battleship.length === 1 &&
+      player2.board.cruisers.length === 2 &&
+      player2.board.destroyers.length === 3 &&
+      player2.board.submarines.length === 4
+    )
+      return true;
+  });
 }
 
 function computerAttack() {
@@ -269,3 +266,41 @@ const playerAttack = function (element) {
     computerAttack();
   }
 };
+
+function randomNumber() {
+  const hitPointY = Math.floor(Math.random() * 10) + 1;
+  const hitPointX = Math.floor(Math.random() * 10) + 1;
+
+  return [hitPointY, hitPointX];
+}
+
+function randomPlacement(conditionFunction) {
+  const result = (resolve) => {
+    if (conditionFunction()) {
+      console.log(player2.board.matrix);
+      resolve();
+    } else {
+      setTimeout((_) => {
+        const b = randomNumber()[0];
+        const c = randomNumber()[1];
+        let d = 'h';
+
+        if (Math.floor(Math.random() * 10) + 1 > 5) d = 'v';
+
+        if (player2.board.battleship.length < 1) {
+          player2.board.placeShip(4, b, c, d);
+        } else if (player2.board.cruisers.length < 2) {
+          player2.board.placeShip(3, b, c, d);
+        } else if (player2.board.destroyers.length < 3) {
+          player2.board.placeShip(2, b, c, d);
+        } else if (player2.board.submarines.length < 4) {
+          player2.board.placeShip(1, b, c, d);
+        }
+
+        result(resolve), 400;
+      });
+    }
+  };
+
+  return new Promise(result);
+}
